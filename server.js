@@ -29,16 +29,28 @@ const User = mongoose.model("User", userSchema);
 
 const exerciseSchema = new Schema(
   {
-    username: { type: String, required: true },
+    userId: { type: String, required: true },
     description: { type: String, required: true },
     duration: { type: Number, required: true },
     Date: { type: Date, required: true },
-  },
-  {
-    timestamps: true,
   }
 );
 const Exercise= mongoose.model("Exercise", exerciseSchema)
+app.post("/api/exercise/add", (req, res) => {
+  let requestObj={};
+  let {userId, description,duration,date}=req.body
+  User.find({_id:userId}).then((data) => {
+   if(data&&data.length>0){
+    //  res.send(data)
+    console.log('data: ', data)
+    let date=new Date()
+    let newExercise = new Exercise({ userId, duration, description, Date: date });
+    newExercise.save().then(data=>{res.send(data)})
+    } else {
+      res.send('user Id does not exist')
+    }
+  }) .catch((err) => res.send(err));
+});
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
@@ -68,19 +80,6 @@ app.get("/api/exercise/users", (req, res) => {
   });
 });
 
-app.post("/api/exercise/add", (req, res) => {
-  let requestObj={};
-  let {userId, description,duration,date}=req.body
-  User.find({_id:userId}).then((data) => {
-   if(data&&data.length>0){
-     res.send(data)
-    // let Exercise = new Exercise({ username: username });
-    // Exercise.save().then(data=>{res.send(data)})
-    } else {
-      res.send('user Id does not exist')
-    }
-  }) .catch((err) => res.send(err));
-});
 
 // POST to /api/exercise/add with form data userId=_id, description, duration, and optionally date. If no date is supplied, the
 //{"_id":"5ec3c38cc530e526ad533782","username":"5WfZFvsBK","date":"Thu Feb 25 2021","duration":30,"description":"run"}
