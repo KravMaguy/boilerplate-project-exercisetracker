@@ -47,6 +47,15 @@ app.post('/api/exercise/new-user', (req, res) => {
   console.log('im logged first because save is async')
 });
 
+app.get('/api/exercise/users', (req, res)=>{
+  let requestObj;
+  User.find({})
+  .then(data=>{
+    // requestObj.push(data)
+    res.json(data)
+  })
+  
+})
 
 
 
