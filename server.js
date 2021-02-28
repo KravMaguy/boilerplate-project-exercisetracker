@@ -45,14 +45,26 @@ app.post("/api/exercise/add", (req, res) => {
     // console.log('data: ', data)
      
     // let date=new Date()
+    console.log(date, '= date')
+    if(!date){
+      console.log('he did not enter')
+      date=new Date()
+    }
     let newExercise = new Exercise({ userId, duration, description, date });
     newExercise.save()
-      .then(data=>{res.send(data)})
-        .catch(err=>res.send(err))
+      .then(data=>{
+        console.log('0')
+        res.send(data)
+      })
+        .catch(err=>{
+          console.log('2')
+          res.send(err)})
     } else {
       res.send('user Id does not exist')
     }
-  }) .catch((err) => res.send(err));
+  }) .catch((err) => {
+    console.log('3')
+    res.send(err)});
 });
 
 // {"_id":"603b6f987bd9ef062c3ed322","username":"abrahimusmaximus","date":"Sun Jul 01 2001","duration":60,"description":"boxing"}
