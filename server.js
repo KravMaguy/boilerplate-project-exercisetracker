@@ -57,7 +57,7 @@ app.post("/api/exercise/add", (req, res) => {
         console.log(data, 'data below')
         console.log(username, 'username below')
         console.log('0')
-        res.json({userId,username,description,duration,date})
+        res.json({_id:userId,username,description,duration:Number(duration),date})
       })
         .catch(err=>{
           console.log('2')
