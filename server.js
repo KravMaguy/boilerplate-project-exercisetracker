@@ -45,16 +45,19 @@ app.post("/api/exercise/add", (req, res) => {
     // console.log('data: ', data)
      
     // let date=new Date()
-    console.log(date, '= date')
     if(!date){
       console.log('he did not enter')
       date=new Date()
     }
+    console.log(data, 'data above')
+    let username=data[0].username
     let newExercise = new Exercise({ userId, duration, description, date });
     newExercise.save()
       .then(data=>{
+        console.log(data, 'data below')
+        console.log(username, 'username below')
         console.log('0')
-        res.send(data)
+        res.json({userId,username,description,duration,date})
       })
         .catch(err=>{
           console.log('2')
