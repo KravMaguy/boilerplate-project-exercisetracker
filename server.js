@@ -32,7 +32,7 @@ const exerciseSchema = new Schema(
     userId: { type: String, required: true },
     description: { type: String, required: true },
     duration: { type: Number, required: true },
-    Date: { type: Date, required: true },
+    date: { type: Date, required: true },
   }
 );
 const Exercise= mongoose.model("Exercise", exerciseSchema)
@@ -42,15 +42,20 @@ app.post("/api/exercise/add", (req, res) => {
   User.find({_id:userId}).then((data) => {
    if(data&&data.length>0){
     //  res.send(data)
-    console.log('data: ', data)
-    let date=new Date()
-    let newExercise = new Exercise({ userId, duration, description, Date: date });
-    newExercise.save().then(data=>{res.send(data)})
+    // console.log('data: ', data)
+     
+    // let date=new Date()
+    let newExercise = new Exercise({ userId, duration, description, date });
+    newExercise.save()
+      .then(data=>{res.send(data)})
+        .catch(err=>res.send(err))
     } else {
       res.send('user Id does not exist')
     }
   }) .catch((err) => res.send(err));
 });
+
+// {"_id":"603b6f987bd9ef062c3ed322","username":"abrahimusmaximus","date":"Sun Jul 01 2001","duration":60,"description":"boxing"}
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
