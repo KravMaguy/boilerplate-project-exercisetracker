@@ -115,7 +115,7 @@ app.get("/", (req, res) => {
 app.post("/api/exercise/new-user", (req, res) => {
   const responseObject = {};
   const username = req.body.username;
-  const newUser = new User({ username: username });
+  const newUser = new User({ username });
   newUser.save().then((data) => {
     console.log(data, "data");
     const username = data.username;
@@ -129,7 +129,6 @@ app.post("/api/exercise/new-user", (req, res) => {
 });
 
 app.get("/api/exercise/users", (req, res) => {
-  const requestObj;
   User.find({}).then((data) => {
     // requestObj.push(data)
     res.json(data);
