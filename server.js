@@ -154,7 +154,7 @@ app.get("/api/exercise/log", (req, res) => {
       { userId },
       { date: { $gt: new Date(from), $lt: new Date(to) } }
     )
-      .select(["id", "duration", "date", "description"])
+      .select(["duration", "date", "description"])
       .limit(Number(limit))
       .exec((err, data) => {
         if (data) {
@@ -164,6 +164,15 @@ app.get("/api/exercise/log", (req, res) => {
           resultObject._id = userId;
           resultObject.username = username;
           resultObject.count = data.length;
+          let holder = [];
+          data.forEach((log) => {
+            holder.push({
+              duration: log.duration,
+              description: log.description,
+              date: log.date.toDateString(),
+            });
+          });
+          resultObject.log = holder;
           return res.json(resultObject);
         }
         if (err) {
