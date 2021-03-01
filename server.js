@@ -34,9 +34,72 @@ const exerciseSchema = new Schema({
   date: { type: Date, required: true },
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
+
+// const how_Fcc_wants_Date = (date) => {
+//   var days = new Array(
+//     "Sunday",
+//     "Monday",
+//     "Tuesday",
+//     "Wednesday",
+//     "Thursday",
+//     "Friday",
+//     "Saturday"
+//   );
+
+//   var months = new Array(
+//     "January",
+//     "February",
+//     "March",
+//     "April",
+//     "May",
+//     "June",
+//     "July",
+//     "August",
+//     "September",
+//     "October",
+//     "November",
+//     "December"
+//   );
+
+//   date = (date.getDate() < 10 ? "0" : "") + date.getDate();
+
+//   const fourdigits = (number) => {
+//     return number < 1000 ? number + 1900 : number;
+//   };
+//   date =
+//     days[date.getDay()] +
+//     " " +
+//     months[date.getMonth()] +
+//     " " +
+//     date +
+//     " " +
+//     fourdigits(date.getYear());
+
+//   return date;
+// };
+
+//yak id 603c93ca7bd9ef062c3ed356 fcc rocks
+//yak id 603c94ad7d39ed36a09c06c1 localhost
+
+const yakobjFccRocks = {
+  _id: "603c93ca7bd9ef062c3ed356",
+  username: "yakhousam",
+  date: "Sun Feb 10 2019",
+  duration: 60,
+  description: "boxing",
+};
+const yakobjLocalHost = {
+  _id: "603c94ad7d39ed36a09c06c1",
+  username: "yakhousam",
+  description: "boxing",
+  duration: 60,
+  date: "2019-02-10",
+};
+
 app.post("/api/exercise/add", (req, res) => {
   const requestObj = {};
-  const { userId, description, duration, date } = req.body;
+  const { userId, description, duration } = req.body;
+  let { date } = req.body;
   User.find({ _id: userId })
     .then((data) => {
       if (data && data.length > 0) {
@@ -62,6 +125,9 @@ app.post("/api/exercise/add", (req, res) => {
             console.log(data, "data below");
             console.log(username, "username below");
             console.log("0");
+            console.log(data.date, "the data date");
+            date = data.date.toDateString();
+            console.log(date, "the date after fccwants it");
             res.json({
               _id: userId,
               username,
@@ -72,6 +138,7 @@ app.post("/api/exercise/add", (req, res) => {
           })
           .catch((err) => {
             console.log("2");
+            console.log(err, "the err");
             res.send(err);
           });
       } else {
