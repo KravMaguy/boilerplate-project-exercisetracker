@@ -35,52 +35,6 @@ const exerciseSchema = new Schema({
 });
 const Exercise = mongoose.model("Exercise", exerciseSchema);
 
-// const how_Fcc_wants_Date = (date) => {
-//   var days = new Array(
-//     "Sunday",
-//     "Monday",
-//     "Tuesday",
-//     "Wednesday",
-//     "Thursday",
-//     "Friday",
-//     "Saturday"
-//   );
-
-//   var months = new Array(
-//     "January",
-//     "February",
-//     "March",
-//     "April",
-//     "May",
-//     "June",
-//     "July",
-//     "August",
-//     "September",
-//     "October",
-//     "November",
-//     "December"
-//   );
-
-//   date = (date.getDate() < 10 ? "0" : "") + date.getDate();
-
-//   const fourdigits = (number) => {
-//     return number < 1000 ? number + 1900 : number;
-//   };
-//   date =
-//     days[date.getDay()] +
-//     " " +
-//     months[date.getMonth()] +
-//     " " +
-//     date +
-//     " " +
-//     fourdigits(date.getYear());
-
-//   return date;
-// };
-
-//yak id 603c93ca7bd9ef062c3ed356 fcc rocks
-//yak id 603c94ad7d39ed36a09c06c1 localhost
-
 const yakobjFccRocks = {
   _id: "603c93ca7bd9ef062c3ed356",
   username: "yakhousam",
@@ -103,10 +57,6 @@ app.post("/api/exercise/add", (req, res) => {
   User.find({ _id: userId })
     .then((data) => {
       if (data && data.length > 0) {
-        //  res.send(data)
-        // console.log('data: ', data)
-
-        // const date=new Date()
         if (!date) {
           console.log("he did not enter");
           date = new Date();
@@ -151,30 +101,81 @@ app.post("/api/exercise/add", (req, res) => {
     });
 });
 
-//http://localhost:3000/api/exercise/log?userId=603b703ee1054b2014e06dcd&from=1970-01-01&to=2021-02-28&limit=3
+//yak id 603c94ad7d39ed36a09c06c1 localhost
+//yak id 603c93ca7bd9ef062c3ed356 fcc rocks
+
+//http://localhost:3000/api/exercise/log?userId=603c94ad7d39ed36a09c06c1&from=1970-01-01&to=2021-02-28&limit=3
+// https://exercise-tracker.freecodecamp.rocks/api/exercise/log?userId=603c93ca7bd9ef062c3ed356&from=1970-01-01&to=2021-01-28&limit=3
+
+// You can make a GET request to /api/exercise/log with a parameter of userId=_id to retrieve a full exercise log of any user. The returned response will be the user object with a log array of all the exercises added. Each log item has the description, duration, and date properties.
+
+const fcclogResObj = {
+  _id: "603c93ca7bd9ef062c3ed356",
+  username: "yakhousam",
+  count: 3,
+  log: [
+    {
+      description: "running",
+      duration: 30,
+      date: "Mon Mar 01 2021",
+    },
+    {
+      description: "snowboarding",
+      duration: 30,
+      date: "Mon Feb 01 2021",
+    },
+    {
+      description: "boxing",
+      duration: 60,
+      date: "Sun Feb 10 2019",
+    },
+  ],
+};
 app.get("/api/exercise/log", (req, res) => {
   // console.log(req.query)
-  const { userId, from, to, limit } = req.query;
-  Exercise.find(
-    { userId },
-    { date: { $gt: new Date(from), $lt: new Date(to) } }
-  )
-    .select(["id", "duration", "date", "description"])
-    .limit(Number(limit))
-    .exec((err, data) => {
-      if (data) {
-        console.log("here data");
-        return res.send(data);
-      }
-      if (err) {
-        console.log("here");
-        res.send(err);
-      } else {
-        console.log("here in the else");
-        res.send({});
-      }
-    });
+  // const { userId, from, to, limit } = req.query;
+  const {
+    userId,
+    from = "1980-01-01",
+    to = Date.now(),
+    limit = 100,
+  } = req.query;
+  console.log("userId=", userId);
+  const resultObject = {};
+  User.findById(userId, (err, data) => {
+    if (!data) {
+      console.log("got here");
+      res.send("Unknown userId");
+    }
+    console.log(data, "data");
+    let { username } = data;
+    console.log(username, "username above");
+    Exercise.find(
+      { userId },
+      { date: { $gt: new Date(from), $lt: new Date(to) } }
+    )
+      .select(["id", "duration", "date", "description"])
+      .limit(Number(limit))
+      .exec((err, data) => {
+        if (data) {
+          console.log("here data");
+          // return res.json(data);
+          console.log("username below=", username);
+          resultObject._id = userId;
+          resultObject.username = username;
+          return res.json(resultObject);
+        }
+        if (err) {
+          console.log("here");
+          res.send(err);
+        } else {
+          console.log("here in the else");
+          res.send({});
+        }
+      });
+  });
 });
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
