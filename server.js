@@ -133,13 +133,13 @@ const fcclogResObj = {
 };
 app.get("/api/exercise/log", (req, res) => {
   // console.log(req.query)
-  // const { userId, from, to, limit } = req.query;
-  const {
-    userId,
-    from = "1980-01-01",
-    to = Date.now(),
-    limit = 100,
-  } = req.query;
+  const { userId, from, to, limit } = req.query;
+  // const {
+  //   userId,
+  //   from = "1980-01-01",
+  //   to = Date.now(),
+  //   limit = 100,
+  // } = req.query;
   console.log("userId=", userId);
   const resultObject = {};
   User.findById(userId, (err, data) => {
