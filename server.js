@@ -158,11 +158,12 @@ app.get("/api/exercise/log", (req, res) => {
       .limit(Number(limit))
       .exec((err, data) => {
         if (data) {
-          console.log("here data");
+          console.log("here data=", data);
           // return res.json(data);
           console.log("username below=", username);
           resultObject._id = userId;
           resultObject.username = username;
+          resultObject.count = data.length;
           return res.json(resultObject);
         }
         if (err) {
